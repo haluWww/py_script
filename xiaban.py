@@ -6,7 +6,7 @@ import win32con
 import pyautogui
 import time
 import webbrowser
-
+import json
 class fishing:
   def detect(img1, img2):
     img1 = cv2.GaussianBlur(img1, [1, 1], 0)
@@ -31,42 +31,50 @@ class fishing:
   def painting(target, rect_pos):
     for x, y, w, h in rect_pos:
       cv2.rectangle(target, [x, y], [x + w, y + h], [0, 0, 255], 2)
-    
-
-def 搞个图片():
-  time.sleep(2)
-  hwnd = win32gui.FindWindow('Chrome_WidgetWin_1', '腾讯外包研发管理平台 - Google Chrome')
-  if hwnd == 0:
-    webbrowser.open('https://om.tencent.com/attendances/check_out/20950700?from=TAPD')
+      
+data = json.load(open('config.json', encoding='utf-8'))
+print(data['resolution'][0], data['resolution'][1])
+def 搞个图片(targetImg):
+  def 点击目标():
     time.sleep(2)
     hwnd = win32gui.FindWindow('Chrome_WidgetWin_1', '腾讯外包研发管理平台 - Google Chrome')
+    if hwnd == 0:
+      webbrowser.open(data['om'])
+      time.sleep(2)
+      hwnd = win32gui.FindWindow('Chrome_WidgetWin_1', '腾讯外包研发管理平台 - Google Chrome')
+      
+    win32gui.SetWindowPos(hwnd, win32con.HWND_TOP, 0, 0, int(data['resolution'][0]), int(data['resolution'][1]), win32con.SWP_SHOWWINDOW)
+    win32gui.ShowWindow(hwnd, win32con.SW_MAXIMIZE)
+    pyautogui.screenshot(region=[ 0, 0, int(data['resolution'][0]), int(data['resolution'][1]) ]).save('./pic/scrennshot.png')
+    img = cv2.imread('./pic/scrennshot.png')
+    w, h = targetImg.shape[:-1]
+    targetResult = cv2.matchTemplate(img, targetImg, cv2.TM_SQDIFF_NORMED)
+    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(targetResult)
+    pyautogui.click(x=(min_loc[0] + h/2), y=(min_loc[1] + w/2), duration=2)
     
-  win32gui.SetWindowPos(hwnd, win32con.HWND_TOP, 0,0,2560,1440, win32con.SWP_SHOWWINDOW)
-  win32gui.ShowWindow(hwnd, win32con.SW_MAXIMIZE)
-  pyautogui.screenshot(region=[0,0,2560,1440]).save('./pic/scrennshot.png')
-  img = cv2.imread('./pic/scrennshot.png')
-  qianchu = cv2.imread('./pic/qianchu.png')
-  w, h = qianchu.shape[:-1]
-  qianchuResult = cv2.matchTemplate(img, qianchu, cv2.TM_SQDIFF_NORMED)
-  min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(qianchuResult)
-  pyautogui.click(x=(min_loc[0] + h/2), y=(min_loc[1] + w/2), duration=2)
-  
-  time.sleep(2)
-  
-  pyautogui.screenshot(region=[0,0,2560,1440]).save('./pic/scrennshot.png')
-  img = cv2.imread('./pic/scrennshot.png')
-  queding = cv2.imread('./pic/queding.png')
-  w, h = queding.shape[:-1]
-  quedingResult = cv2.matchTemplate(img, queding, cv2.TM_SQDIFF_NORMED)
-  min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(quedingResult)
-  pyautogui.click(x=(min_loc[0] + h/2), y=(min_loc[1] + w/2), duration=2)
+    time.sleep(2)
+    
+    pyautogui.screenshot(region=[0, 0, int(data['resolution'][0]), int(data['resolution'][1])]).save('./pic/scrennshot.png')
+    img = cv2.imread('./pic/scrennshot.png')
+    queding = cv2.imread('./pic/queding.png')
+    w, h = queding.shape[:-1]
+    quedingResult = cv2.matchTemplate(img, queding, cv2.TM_SQDIFF_NORMED)
+    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(quedingResult)
+    pyautogui.click(x=(min_loc[0] + h/2), y=(min_loc[1] + w/2), duration=2)
+  return 点击目标
+
 
   
 root_window = tk.Tk() 
-root_window.title('抢手机')
+root_window.title('自动点打卡')
 root_window.geometry('200x200+1200+0')
-xiaban = tk.Button(root_window, text='下班', width=20, height=2, command=搞个图片)
+
+qianchu = cv2.imread('./pic/qianchu.png')
+xiaban = tk.Button(root_window, text='下班', width=20, height=2, command=搞个图片(qianchu))
 xiaban.pack()
-shangban = tk.Button(root_window, text='上班', width=20, height=2, command=搞个图片)
+
+qianru = cv2.imread('./pic/qianru.png')
+shangban = tk.Button(root_window, text='上班', width=20, height=2, command=搞个图片(qianru))
 shangban.pack()
+
 root_window.mainloop()

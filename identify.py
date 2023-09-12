@@ -1,10 +1,11 @@
 import cv2
 import numpy as np 
 
-img = cv2.imread('./img/youyu1.jpg')
+img = cv2.imread('./img/wuyu2.jpg')
 img2 = cv2.imread('./img/wuyu1.jpg')
-img = cv2.GaussianBlur(img, [11, 11], 0)
-img2 = cv2.GaussianBlur(img2, [11, 11], 0)
+
+img = cv2.GaussianBlur(img, [9, 9], 0)
+img2 = cv2.GaussianBlur(img2, [9, 9], 0)
 diff = cv2.absdiff(img, img2)
 cvtDiff = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
 _, result = cv2.threshold(cvtDiff, 20, 255,  cv2.THRESH_BINARY)
