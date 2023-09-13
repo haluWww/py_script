@@ -41,13 +41,37 @@ class fishing:
 class checkIn:
   data = json.load(open('config.json', encoding='utf-8'))
   def __init__(self) -> None:
-    hwnd = win32gui.FindWindow('Chrome_WidgetWin_1', '腾讯外包研发管理平台 - Google Chrome')
-    if hwnd == 0:
-      webbrowser.open(self.data['om'])
-      time.sleep(2)
-      hwnd = win32gui.FindWindow('Chrome_WidgetWin_1', '腾讯外包研发管理平台 - Google Chrome')    
-    win32gui.SetWindowPos(hwnd, win32con.HWND_TOP, 0, 0, int(self.data['resolution'][0]), int(self.data['resolution'][1]), win32con.SWP_SHOWWINDOW)
-    win32gui.ShowWindow(hwnd, win32con.SW_MAXIMIZE)
+    self.getWindow()
+    steps = ['qianru', 'queding', 'qianchu', 'queding']
+    target = np.array()
+    if not self.data['inTime']:
+      target = cv2.imread('./pic/qianru.png') 
+    else:
+      target = cv2.imread('./pic/qianchu.png')
+      
+    start = time.time()
+    end = time.time()
+    while (end - start) < 10000:
+      time.sleep(1)
+      flag, loc, w, h = self.find(target)
+      if flag:
+        self.click(loc, w, h)
+      end = time.time()
+        
+  def getWindow(self):
+    hwnd = 0
+    while hwnd == 0:
+      time.sleep(1)
+      hwnd = win32gui.FindWindow('Chrome_WidgetWin_1', '腾讯外包研发管理平台 - Google Chrome')
+      if hwnd == 0:
+        webbrowser.open(self.data['om'])
+        time.sleep(2)
+        hwnd = win32gui.FindWindow('Chrome_WidgetWin_1', '腾讯外包研发管理平台 - Google Chrome')
+      
+      if hwnd != 0:
+        win32gui.SetWindowPos(hwnd, win32con.HWND_TOP, 0, 0, int(self.data['resolution'][0]), int(self.data['resolution'][1]), win32con.SWP_SHOWWINDOW)
+        win32gui.ShowWindow(hwnd, win32con.SW_MAXIMIZE)
+    return hwnd
   def find(self, target):
     pyautogui.screenshot(region=[0, 0, int(self.data['resolution'][0]), int(self.data['resolution'][1])]).save('./pic/scrennshot.png')
     img = cv2.imread('./pic/scrennshot.png')
@@ -73,6 +97,8 @@ class checkIn:
     i = f.read()
     re = ocr.classification(i)
     return re
+
+daka = checkIn()
     
 # data = json.load(open('config.json', encoding='utf-8')) 
 # def 搞个图片(targetImg):
@@ -112,16 +138,16 @@ class checkIn:
 
 
   
-root_window = tk.Tk() 
-root_window.title('自动点打卡')
-root_window.geometry('200x200+1200+0')
+# root_window = tk.Tk() 
+# root_window.title('自动点打卡')
+# root_window.geometry('200x200+1200+0')
 
-qianchu = cv2.imread('./pic/qianchu.png')
-xiaban = tk.Button(root_window, text='下班', width=20, height=2, command=搞个图片(qianchu))
-xiaban.pack()
+# qianchu = cv2.imread('./pic/qianchu.png')
+# xiaban = tk.Button(root_window, text='下班', width=20, height=2, command=搞个图片(qianchu))
+# xiaban.pack()
 
-qianru = cv2.imread('./pic/qianru.png')
-shangban = tk.Button(root_window, text='上班', width=20, height=2, command=搞个图片(qianru))
-shangban.pack()
+# qianru = cv2.imread('./pic/qianru.png')
+# shangban = tk.Button(root_window, text='上班', width=20, height=2, command=搞个图片(qianru))
+# shangban.pack()
 
-root_window.mainloop()
+# root_window.mainloop()
