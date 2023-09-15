@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(
-    ['xiaban.py'],
+    ['xiaban', 'copy.py'],
     pathex=[],
     binaries=[],
     datas=[],
