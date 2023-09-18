@@ -1,5 +1,1 @@
-{
-    "om": "https://om.tencent.com/attendances/check_out/20973781?have_checked_out=true",
-    "resolution": ["2560", "1440"],
-    "inTime": "2023-09-15"
-}
+{"om": "https://om.tencent.com/attendances/check_out/20973781?have_checked_out=true", "resolution": ["2560", "1440"], "inTime": 1695020006.3070736, "outTime": 1695020691.7871125}
