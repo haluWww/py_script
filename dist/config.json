@@ -1,4 +1,1 @@
-{
-    "om": "https://om.tencent.com/attendances/check_out/20973781?have_checked_out=true",
-    "resolution": ["2560", "1440"]
-}
+{"om": "https://om.tencent.com/attendances/check_out/20973781?have_checked_out=true", "resolution": ["2560", "1440"], "inTime": 1695173832.2736218, "outTime": 1695120011.5899148}
