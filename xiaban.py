@@ -31,7 +31,7 @@ class fishing:
   def painting(target, rect_pos):
     for x, y, w, h in rect_pos:
       cv2.rectangle(target, [x, y], [x + w, y + h], [0, 0, 255], 2)
-      
+datas=[('C:\Users\v_chenhli\AppData\Local\Programs\Python\Python311\Lib\site-packages\onnxruntime_providers_shared.dll','onnxruntime\\capi'),('C:\Users\v_chenhli\AppData\Local\Programs\Python\Python311\Lib\site-packages\ddddocr\common.onnx','ddddocr')]
 data = json.load(open('config.json', encoding='utf-8'))
 print(data['resolution'][0], data['resolution'][1])
 def 搞个图片(targetImg):
